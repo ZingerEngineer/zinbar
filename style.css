@@ -164,6 +164,7 @@ tooltip {
    ═══════════════════════════════════════════════════════════ */
 #custom-lock,
 #custom-logout,
+#custom-reboot,
 #custom-shutdown {
   color:         #E6E1CF;
   border-radius: 6px;
@@ -173,8 +174,9 @@ tooltip {
 
 
 /* ── Session button hover — text color only ─────────────── */
-#custom-lock:hover    { color: #59C2FF; }
-#custom-logout:hover  { color: #FF8F40; }
+#custom-lock:hover     { color: #59C2FF; }
+#custom-logout:hover   { color: #FF8F40; }
+#custom-reboot:hover   { color: #E6B450; }
 #custom-shutdown:hover { color: #F07178; }
 
 /* ═══════════════════════════════════════════════════════════

@@ -12,6 +12,7 @@
     "clock",
     "custom/lock",
     "custom/logout",
+    "custom/reboot",
     "custom/shutdown"
   ],
 
@@ -38,6 +39,12 @@
     "format": "󰍃",
     "tooltip": false,
     "on-click": "hyprctl dispatch exit"
+  },
+
+  "custom/reboot": {
+    "format": "󰑓",
+    "tooltip": false,
+    "on-click": "systemctl reboot"
   },
 
   "custom/shutdown": {
