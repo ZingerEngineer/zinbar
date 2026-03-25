@@ -1,0 +1,165 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 4,
+  "margin-left": 8,
+  "margin-right": 8,
+  "height": 28,
+  "spacing": 4,
+
+  "modules-left": [
+    "hyprland/workspaces",
+    "clock",
+    "custom/lock",
+    "custom/logout",
+    "custom/shutdown"
+  ],
+
+  "modules-right": [
+    "cpu",
+    "memory",
+    "disk",
+    "network",
+    "battery",
+    "pulseaudio",
+    "backlight",
+    "tray",
+    "custom/language"
+  ],
+
+  // ── Session controls ────────────────────────
+  "custom/lock": {
+    "format": "󰌾",
+    "tooltip": false,
+    "on-click": "hyprlock"
+  },
+
+  "custom/logout": {
+    "format": "󰍃",
+    "tooltip": false,
+    "on-click": "hyprctl dispatch exit"
+  },
+
+  "custom/shutdown": {
+    "format": "󰐦",
+    "tooltip": false,
+    "on-click": "systemctl poweroff"
+  },
+
+  // ── Workspaces ──────────────────────────────
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "active":  "",
+      "default": "·",
+      "urgent":  ""
+    },
+    "on-scroll-up":   "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+
+  // ── Clock ────────────────────────────────────
+  "clock": {
+    "format": "󰃰  {:%a %d %b  %I:%M:%S %p}",
+    "interval": 1,
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "left",
+      "format": {
+        "today": "<span color='#AAD94C'><b>{}</b></span>"
+      }
+    }
+  },
+
+  // ── CPU ──────────────────────────────────────
+  "cpu": {
+    "interval": 2,
+    "format": "󰻠  {usage}%",
+    "states": {
+      "warning": 70,
+      "critical": 85
+    },
+    "tooltip": false
+  },
+
+  // ── Memory ───────────────────────────────────
+  "memory": {
+    "interval": 5,
+    "format": "󰘚  {percentage}%",
+    "states": {
+      "warning": 70,
+      "critical": 85
+    },
+    "tooltip-format": "{used:0.1f}G / {total:0.1f}G"
+  },
+
+  // ── Disk ─────────────────────────────────────
+  "disk": {
+    "interval": 30,
+    "path": "/",
+    "format": "󰋊  {percentage_used}%",
+    "states": {
+      "warning": 70,
+      "critical": 85
+    },
+    "tooltip-format": "{used} / {total}"
+  },
+
+  // ── Network ──────────────────────────────────
+  "network": {
+    "interval": 2,
+    "format-wifi": "󰤨  {essid}  󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+    "format-ethernet": "󰈀  󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+    "format-disconnected": "󰤭  Disconnected",
+    "tooltip-format": "Interface: {ifname}\nIP: {ipaddr}\nGateway: {gwaddr}",
+    "on-click": ""
+  },
+
+  // ── Battery ──────────────────────────────────
+  "battery": {
+    "states": {
+      "warning": 20,
+      "critical": 10
+    },
+    "format":           "{icon}  {capacity}%",
+    "format-charging":  "󰂄  {capacity}%",
+    "format-icons":     ["󰂎","󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"]
+  },
+
+  // ── Audio ─────────────────────────────────────
+  "pulseaudio": {
+    "format":        "{icon}  {volume}%",
+    "format-muted":  "󰝟  Muted",
+    "format-icons": {
+      "default": ["󰕿","󰖀","󰕾"]
+    },
+    "on-click": "pavucontrol"
+  },
+
+  // ── Backlight ─────────────────────────────────
+  "backlight": {
+    "device": "nvidia_0",
+    "format": "{icon}  {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
+    "on-scroll-up": "brightnessctl set +5%",
+    "on-scroll-down": "brightnessctl set 5%-",
+    "on-click": "[ $(brightnessctl get) -gt 50 ] && brightnessctl set 50% || brightnessctl set 100%"
+  },
+
+  // ── Language ─────────────────────────────────
+  "custom/language": {
+    "exec": "layout=$(hyprctl devices -j | jq -r '[.keyboards[] | select(.main == true) | .active_keymap][0]'); [[ \"$layout\" == *Arabic* ]] && echo '󰌌  AR' || echo '󰌌  EN'",
+    "interval": 1,
+    "on-click": "hyprctl switchxkblayout all next",
+    "tooltip": false
+  },
+
+  // ── Tray ─────────────────────────────────────
+  "tray": {
+    "spacing": 8
+  }
+}

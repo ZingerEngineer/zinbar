@@ -1,0 +1,190 @@
+/* ─────────────────────────────────────────────────────────
+   Waybar — Ayu Dark  ·  MesloLGS NF  ·  Neon borders
+   ───────────────────────────────────────────────────────── */
+
+/* ── Reset ──────────────────────────────────────────────── */
+* {
+  font-family:   "MesloLGS NF", "Meslo LG S NF", monospace;
+  font-size:     10px;
+  border:        none;
+  border-radius: 0;
+  min-height:    0;
+}
+
+/* ── Bar window ─────────────────────────────────────────── */
+window#waybar {
+  background: transparent;
+  color:      #B3B1AD;
+}
+
+/* ── Tooltip ────────────────────────────────────────────── */
+tooltip {
+  background:    rgba(13, 16, 23, 0.97);
+  border:        1px solid rgba(30, 37, 48, 0.9);
+  border-radius: 8px;
+  color:         #E6E1CF;
+}
+
+/* ── Pill containers ────────────────────────────────────── */
+.modules-left,
+.modules-right {
+  background:    rgba(13, 16, 23, 0.95);
+  border:        1px solid rgba(30, 37, 48, 0.9);
+  border-radius: 8px;
+  padding:       0 6px;
+}
+
+/* ── Shared module padding ──────────────────────────────── */
+#workspaces,
+#clock,
+#cpu,
+#memory,
+#disk,
+#network,
+#battery,
+#pulseaudio,
+#backlight,
+#tray,
+#custom-language,
+#custom-lock,
+#custom-logout,
+#custom-shutdown {
+  padding: 0 10px;
+}
+
+/* ── Module dividers ────────────────────────────────────── */
+#memory,
+#disk,
+#network,
+#battery,
+#backlight,
+#pulseaudio,
+#tray,
+#custom-language {
+  border-left: 1px solid rgba(30, 37, 48, 0.9);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COLOR ASSIGNMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── System metrics → Ayu Blue ─────────────────────────── */
+#cpu     { color: #59C2FF; }
+#memory  { color: #59C2FF; }
+#disk    { color: #59C2FF; }
+#network {
+  color:     #59C2FF;
+  min-width: 230px;
+}
+#network.disconnected { color: #4A5568; }
+
+/* ── Battery / Audio / Display → Ayu Green ─────────────── */
+#battery   { color: #AAD94C; }
+#pulseaudio { color: #AAD94C; }
+#backlight  { color: #AAD94C; }
+#pulseaudio.muted { color: #4A5568; }
+
+/* ── Keyboard language → Ayu Orange ────────────────────── */
+#custom-language { color: #FF8F40; }
+
+/* ── Clock → Ayu White ──────────────────────────────────── */
+#clock {
+  color:       #E6E1CF;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ALERT STATES  (warning → yellow · critical → pulsing red)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CPU ────────────────────────────────────────────────── */
+#cpu.warning  { color: #FFB454; }
+#cpu.critical {
+  color:     #F07178;
+  animation: pulse-red 1.4s ease-in-out infinite;
+}
+
+/* ── Memory ─────────────────────────────────────────────── */
+#memory.warning  { color: #FFB454; }
+#memory.critical {
+  color:     #F07178;
+  animation: pulse-red 1.4s ease-in-out infinite;
+}
+
+/* ── Disk ───────────────────────────────────────────────── */
+#disk.warning  { color: #FFB454; }
+#disk.critical {
+  color:     #F07178;
+  animation: pulse-red 1.4s ease-in-out infinite;
+}
+
+/* ── Battery ────────────────────────────────────────────── */
+#battery.charging { color: #E6B450; }
+
+#battery.warning:not(.charging) {
+  color:     #F07178;
+  animation: pulse-red 1.4s ease-in-out infinite;
+}
+
+#battery.critical:not(.charging) {
+  color:     #F07178;
+  animation: pulse-red 0.7s ease-in-out infinite;
+}
+
+/* ── Pulsating red animation ────────────────────────────── */
+@keyframes pulse-red {
+  0%   { color: #F07178; }
+  50%  { color: rgba(240, 113, 120, 0.18); }
+  100% { color: #F07178; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WORKSPACES
+   ═══════════════════════════════════════════════════════════ */
+#workspaces button {
+  background:    transparent;
+  color:         #4A5568;
+  border-radius: 6px;
+  padding:       0 6px;
+  min-width:     0;
+}
+
+#workspaces button.active {
+  color:      #E6B450;
+  background: rgba(230, 180, 80, 0.10);
+}
+
+#workspaces button.urgent {
+  color: #F07178;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   SESSION CONTROLS  (lock · logout · shutdown)
+   ═══════════════════════════════════════════════════════════ */
+#custom-lock,
+#custom-logout,
+#custom-shutdown {
+  color:         #E6E1CF;
+  border-radius: 6px;
+  padding:       2px 10px;
+  margin:        0;
+}
+
+
+/* ── Session button hover — text color only ─────────────── */
+#custom-lock:hover    { color: #59C2FF; }
+#custom-logout:hover  { color: #FF8F40; }
+#custom-shutdown:hover { color: #F07178; }
+
+/* ═══════════════════════════════════════════════════════════
+   TRAY
+   ═══════════════════════════════════════════════════════════ */
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  color:            #FFB454;
+}
