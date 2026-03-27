@@ -37,28 +37,30 @@ tooltip {
 /* ── Shared module padding ──────────────────────────────── */
 #workspaces,
 #clock,
-#cpu,
+#custom-cpu,
 #memory,
-#disk,
+#custom-disk,
+#custom-gpu,
 #network,
+#bluetooth,
 #battery,
 #pulseaudio,
 #backlight,
 #tray,
 #custom-language,
-#custom-lock,
-#custom-logout,
-#custom-shutdown {
+#custom-power {
   padding: 0 10px;
 }
 
 /* ── Module dividers ────────────────────────────────────── */
 #memory,
-#disk,
+#custom-disk,
+#custom-gpu,
 #network,
+#bluetooth,
 #battery,
-#backlight,
 #pulseaudio,
+#backlight,
 #tray,
 #custom-language {
   border-left: 1px solid rgba(30, 37, 48, 0.9);
@@ -69,23 +71,38 @@ tooltip {
    ═══════════════════════════════════════════════════════════ */
 
 /* ── System metrics → Ayu Blue ─────────────────────────── */
-#cpu     { color: #59C2FF; }
-#memory  { color: #59C2FF; }
-#disk    { color: #59C2FF; }
-#network {
-  color:     #59C2FF;
-  min-width: 230px;
-}
-#network.disconnected { color: #4A5568; }
+#custom-cpu  { color: #59C2FF; }
+#memory      { color: #59C2FF; }
+#custom-disk { color: #59C2FF; }
+#custom-gpu  { color: #59C2FF; }
 
-/* ── Battery / Audio / Display → Ayu Green ─────────────── */
-#battery   { color: #AAD94C; }
-#pulseaudio { color: #AAD94C; }
-#backlight  { color: #AAD94C; }
-#pulseaudio.muted { color: #4A5568; }
+/* ── Network → Ayu Blue ─────────────────────────────────── */
+#network             { color: #59C2FF; }
+#network.disconnected{ color: #4A5568; }
+
+/* ── Bluetooth → Ayu Blue ───────────────────────────────── */
+#bluetooth           { color: #59C2FF; }
+#bluetooth.off       { color: #4A5568; }
+#bluetooth.disabled  { color: #4A5568; }
+
+/* ── Battery → Ayu Green ────────────────────────────────── */
+#battery             { color: #AAD94C; }
+#battery.charging    { color: #E6B450; }
+
+/* ── Audio → Ayu Green ──────────────────────────────────── */
+#pulseaudio          { color: #AAD94C; }
+#pulseaudio.muted    { color: #4A5568; }
+
+/* ── Backlight → Ayu Green ──────────────────────────────── */
+#backlight           { color: #AAD94C; }
 
 /* ── Keyboard language → Ayu Orange ────────────────────── */
-#custom-language { color: #FF8F40; }
+#custom-language     { color: #FF8F40; }
+
+/* ── Power button → grey · orange on hover/open ─────────── */
+#custom-power        { color: #B3B1AD; }
+#custom-power:hover,
+#custom-power.open   { color: #FF8F40; }
 
 /* ── Clock → Ayu White ──────────────────────────────────── */
 #clock {
@@ -98,8 +115,8 @@ tooltip {
    ═══════════════════════════════════════════════════════════ */
 
 /* ── CPU ────────────────────────────────────────────────── */
-#cpu.warning  { color: #FFB454; }
-#cpu.critical {
+#custom-cpu.warning  { color: #FFB454; }
+#custom-cpu.critical {
   color:     #F07178;
   animation: pulse-red 1.4s ease-in-out infinite;
 }
@@ -112,30 +129,39 @@ tooltip {
 }
 
 /* ── Disk ───────────────────────────────────────────────── */
-#disk.warning  { color: #FFB454; }
-#disk.critical {
+#custom-disk.warning  { color: #FFB454; }
+#custom-disk.critical {
+  color:     #F07178;
+  animation: pulse-red 1.4s ease-in-out infinite;
+}
+
+/* ── GPU ────────────────────────────────────────────────── */
+#custom-gpu.warning  { color: #FFB454; }
+#custom-gpu.critical {
   color:     #F07178;
   animation: pulse-red 1.4s ease-in-out infinite;
 }
 
 /* ── Battery ────────────────────────────────────────────── */
-#battery.charging { color: #E6B450; }
-
 #battery.warning:not(.charging) {
-  color:     #F07178;
-  animation: pulse-red 1.4s ease-in-out infinite;
+  color:     #FFB454;
+  animation: pulse-yellow 1.4s ease-in-out infinite;
 }
-
 #battery.critical:not(.charging) {
   color:     #F07178;
   animation: pulse-red 0.7s ease-in-out infinite;
 }
 
-/* ── Pulsating red animation ────────────────────────────── */
+/* ── Pulsating animations ───────────────────────────────── */
 @keyframes pulse-red {
   0%   { color: #F07178; }
   50%  { color: rgba(240, 113, 120, 0.18); }
   100% { color: #F07178; }
+}
+@keyframes pulse-yellow {
+  0%   { color: #FFB454; }
+  50%  { color: rgba(255, 180, 84, 0.2); }
+  100% { color: #FFB454; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -148,36 +174,51 @@ tooltip {
   padding:       0 6px;
   min-width:     0;
 }
-
 #workspaces button.active {
   color:      #E6B450;
   background: rgba(230, 180, 80, 0.10);
 }
-
 #workspaces button.urgent {
   color: #F07178;
 }
 
-
 /* ═══════════════════════════════════════════════════════════
-   SESSION CONTROLS  (lock · logout · shutdown)
+   CONTEXT MENUS  (GTK popup — dark Ayu theme)
    ═══════════════════════════════════════════════════════════ */
-#custom-lock,
-#custom-logout,
-#custom-reboot,
-#custom-shutdown {
-  color:         #E6E1CF;
-  border-radius: 6px;
-  padding:       2px 10px;
-  margin:        0;
+menu {
+  background-color: rgba(13, 16, 23, 0.97);
+  border:           1px solid rgba(30, 37, 48, 0.9);
+  border-radius:    8px;
+  padding:          4px 0;
 }
 
+menuitem {
+  color:         #B3B1AD;
+  border-radius: 4px;
+  padding:       6px 14px;
+  min-height:    0;
+  margin:        2px 4px;
+}
 
-/* ── Session button hover — text color only ─────────────── */
-#custom-lock:hover     { color: #59C2FF; }
-#custom-logout:hover   { color: #FF8F40; }
-#custom-reboot:hover   { color: #E6B450; }
-#custom-shutdown:hover { color: #F07178; }
+menuitem:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color:            #D0CECC;
+}
+
+menuitem.power-item:hover {
+  background-color: rgba(255, 143, 64, 0.10);
+  color:            #FF8F40;
+}
+
+menuitem:disabled {
+  color: #4A5568;
+}
+
+separator {
+  background-color: rgba(30, 37, 48, 0.9);
+  min-height:       1px;
+  margin:           4px 8px;
+}
 
 /* ═══════════════════════════════════════════════════════════
    TRAY
@@ -185,7 +226,6 @@ tooltip {
 #tray > .passive {
   -gtk-icon-effect: dim;
 }
-
 #tray > .needs-attention {
   -gtk-icon-effect: highlight;
   color:            #FFB454;

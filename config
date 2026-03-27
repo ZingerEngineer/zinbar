@@ -10,17 +10,16 @@
   "modules-left": [
     "hyprland/workspaces",
     "clock",
-    "custom/lock",
-    "custom/logout",
-    "custom/reboot",
-    "custom/shutdown"
+    "custom/power"
   ],
 
   "modules-right": [
-    "cpu",
+    "custom/cpu",
     "memory",
-    "disk",
+    "custom/disk",
+    "custom/gpu",
     "network",
+    "bluetooth",
     "battery",
     "pulseaudio",
     "backlight",
@@ -28,32 +27,21 @@
     "custom/language"
   ],
 
-  // ── Session controls ────────────────────────
-  "custom/lock": {
-    "format": "󰌾",
+  // ── Power / Session Menu ──────────────────────────────
+  "custom/power": {
+    "format": "󰐥",
     "tooltip": false,
-    "on-click": "hyprlock"
+    "menu": "on-click",
+    "menu-file": "~/.config/waybar/power_menu.xml",
+    "menu-actions": {
+      "lock":     "hyprlock",
+      "logout":   "hyprctl dispatch exit",
+      "reboot":   "systemctl reboot",
+      "shutdown": "systemctl poweroff"
+    }
   },
 
-  "custom/logout": {
-    "format": "󰍃",
-    "tooltip": false,
-    "on-click": "hyprctl dispatch exit"
-  },
-
-  "custom/reboot": {
-    "format": "󰑓",
-    "tooltip": false,
-    "on-click": "systemctl reboot"
-  },
-
-  "custom/shutdown": {
-    "format": "󰐦",
-    "tooltip": false,
-    "on-click": "systemctl poweroff"
-  },
-
-  // ── Workspaces ──────────────────────────────
+  // ── Workspaces ──────────────────────────────────────
   "hyprland/workspaces": {
     "format": "{icon}",
     "format-icons": {
@@ -68,7 +56,7 @@
     }
   },
 
-  // ── Clock ────────────────────────────────────
+  // ── Clock ────────────────────────────────────────────
   "clock": {
     "format": "󰃰  {:%a %d %b  %I:%M:%S %p}",
     "interval": 1,
@@ -82,82 +70,95 @@
     }
   },
 
-  // ── CPU ──────────────────────────────────────
-  "cpu": {
-    "interval": 2,
-    "format": "󰻠  {usage}%",
-    "states": {
-      "warning": 70,
-      "critical": 85
-    },
-    "tooltip": false
+  // ── CPU ──────────────────────────────────────────────
+  "custom/cpu": {
+    "exec":        "~/.config/waybar/scripts/cpu-status.py",
+    "return-type": "json",
+    "interval":    2,
+    "format":      "{}",
+    "tooltip":     true
   },
 
-  // ── Memory ───────────────────────────────────
+  // ── Memory ───────────────────────────────────────────
   "memory": {
     "interval": 5,
     "format": "󰘚  {percentage}%",
-    "states": {
-      "warning": 70,
-      "critical": 85
-    },
-    "tooltip-format": "{used:0.1f}G / {total:0.1f}G"
+    "states": { "warning": 70, "critical": 85 },
+    "tooltip-format": "RAM\n  Used:   {used:0.1f}G\n  Free:   {avail:0.1f}G\n  Total:  {total:0.1f}G\n\nSwap\n  Used:   {swapUsed:0.1f}G\n  Free:   {swapAvail:0.1f}G\n  Total:  {swapTotal:0.1f}G"
   },
 
-  // ── Disk ─────────────────────────────────────
-  "disk": {
-    "interval": 30,
-    "path": "/",
-    "format": "󰋊  {percentage_used}%",
-    "states": {
-      "warning": 70,
-      "critical": 85
-    },
-    "tooltip-format": "{used} / {total}"
+  // ── Disk ─────────────────────────────────────────────
+  "custom/disk": {
+    "exec":        "~/.config/waybar/scripts/disk-status.py",
+    "return-type": "json",
+    "interval":    30,
+    "format":      "{}",
+    "tooltip":     true
   },
 
-  // ── Network ──────────────────────────────────
+  // ── GPU ──────────────────────────────────────────────
+  "custom/gpu": {
+    "exec":        "~/.config/waybar/scripts/gpu-status.py",
+    "return-type": "json",
+    "interval":    2,
+    "format":      "{}",
+    "tooltip":     true
+  },
+
+  // ── Network ──────────────────────────────────────────
   "network": {
     "interval": 2,
-    "format-wifi": "󰤨  {essid}  󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
-    "format-ethernet": "󰈀  󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
-    "format-disconnected": "󰤭  Disconnected",
-    "tooltip-format": "Interface: {ifname}\nIP: {ipaddr}\nGateway: {gwaddr}",
-    "on-click": ""
+    "format-wifi":        "󰤨  {essid}  󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+    "format-ethernet":    "󰈀  󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+    "format-disconnected":"󰤭  Disconnected",
+    "tooltip-format":     "Network\n  Interface:  {ifname}\n  IP:         {ipaddr}\n  Gateway:    {gwaddr}\n  Signal:     {signalStrength}%",
+    "on-click":           "nm-connection-editor"
   },
 
-  // ── Battery ──────────────────────────────────
+  // ── Bluetooth ────────────────────────────────────────
+  "bluetooth": {
+    "format":                             "󰂯  {status}",
+    "format-connected":                   "󰂱  {device_alias}",
+    "format-connected-battery":           "󰂱  {device_alias}  {device_battery_percentage}%",
+    "format-off":                         "󰂲  Off",
+    "tooltip-format":                     "Bluetooth\n  Controller:  {controller_alias}  ({controller_address})",
+    "tooltip-format-connected":           "Bluetooth\n  Controller:  {controller_alias}\n  Devices:     {num_connections}\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "    •  {device_alias}  ({device_address})",
+    "on-click":                           "blueman-manager"
+  },
+
+  // ── Battery ──────────────────────────────────────────
   "battery": {
-    "states": {
-      "warning": 20,
-      "critical": 10
-    },
-    "format":           "{icon}  {capacity}%",
-    "format-charging":  "󰂄  {capacity}%",
-    "format-icons":     ["󰂎","󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"]
+    "states": { "warning": 20, "critical": 10 },
+    "format":          "{icon}  {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-icons":    ["󰂎","󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"],
+    "tooltip-format":  "Battery\n  Charge:  {capacity}%\n  Time:    {timeTo}\n  Power:   {power}W"
   },
 
-  // ── Audio ─────────────────────────────────────
+  // ── Audio ─────────────────────────────────────────────
   "pulseaudio": {
-    "format":        "{icon}  {volume}%",
-    "format-muted":  "󰝟  Muted",
-    "format-icons": {
-      "default": ["󰕿","󰖀","󰕾"]
-    },
-    "on-click": "pavucontrol"
+    "scroll-step": 5,
+    "format":       "{icon}  {volume}%",
+    "format-muted": "󰝟  Muted",
+    "format-icons": { "default": ["󰕿","󰖀","󰕾"] },
+    "tooltip-format": "Audio\n  Volume:  {volume}%\n  Device:  {desc}",
+    "on-click":        "pavucontrol",
+    "on-click-right":  "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
   },
 
-  // ── Backlight ─────────────────────────────────
+  // ── Backlight ─────────────────────────────────────────
   "backlight": {
-    "device": "nvidia_0",
-    "format": "{icon}  {percent}%",
-    "format-icons": ["󰃞", "󰃟", "󰃠"],
-    "on-scroll-up": "brightnessctl set +5%",
+    "device":         "nvidia_0",
+    "format":         "{icon}  {percent}%",
+    "format-icons":   ["󰃞","󰃟","󰃠"],
+    "on-scroll-up":   "brightnessctl set +5%",
     "on-scroll-down": "brightnessctl set 5%-",
-    "on-click": "[ $(brightnessctl get) -gt 50 ] && brightnessctl set 50% || brightnessctl set 100%"
+    "on-click":       "cur=$(brightnessctl get); max=$(brightnessctl max); [ $((cur * 100 / max)) -gt 50 ] && brightnessctl set 50% || brightnessctl set 100%",
+    "tooltip":        false
   },
 
-  // ── Language ─────────────────────────────────
+  // ── Language ─────────────────────────────────────────
   "custom/language": {
     "exec": "layout=$(hyprctl devices -j | jq -r '[.keyboards[] | select(.main == true) | .active_keymap][0]'); [[ \"$layout\" == *Arabic* ]] && echo '󰌌  AR' || echo '󰌌  EN'",
     "interval": 1,
@@ -165,7 +166,7 @@
     "tooltip": false
   },
 
-  // ── Tray ─────────────────────────────────────
+  // ── Tray ─────────────────────────────────────────────
   "tray": {
     "spacing": 8
   }

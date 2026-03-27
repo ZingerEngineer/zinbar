@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interface>
+  <object class="GtkMenu" id="menu">
+    <child>
+      <object class="GtkMenuItem" id="sound">
+        <property name="label">󰕾  Sound Settings</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="bluetooth">
+        <property name="label">󰂯  Bluetooth</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="wifi">
+        <property name="label">󰤨  Wi-Fi</property>
+      </object>
+    </child>
+  </object>
+</interface>
